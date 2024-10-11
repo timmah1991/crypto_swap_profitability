@@ -35,20 +35,16 @@ def fetch_btc_to_eth_conversion_rate():
 class CustomMetricsHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """Handles GET requests for Prometheus scraping."""
-        # Fetch the latest BTC to ETH conversion rate
         fetch_btc_to_eth_conversion_rate()
         
-        # Set HTTP response headers
         self.send_response(200)
         self.send_header("Content-Type", "text/plain; version=0.0.4; charset=utf-8")
         self.end_headers()
         
-        # Output the latest metrics to the HTTP response
         output = generate_latest(REGISTRY)
         self.wfile.write(output)
 
 if __name__ == "__main__":
-    # Start an HTTP server to serve the metrics on port 8069
     server = HTTPServer(('0.0.0.0', 8069), CustomMetricsHandler)
     print("Starting server on port 8069...")
     server.serve_forever()
